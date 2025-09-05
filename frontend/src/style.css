@@ -121,6 +121,11 @@ body {
     position: relative;
 }
 
+a {
+  color: inherit;         /* 使用父元素的颜色 */
+  text-decoration: none;  /* 去掉下划线 */
+}
+
 .wx-hero {
     height: 100vh;
     scroll-snap-align: end;

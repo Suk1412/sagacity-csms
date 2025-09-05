@@ -1,143 +1,5 @@
-
-
-<script setup lang="ts">
-import '@/static/css/index.css';
-import '@/static/css/post.css';
-import '@/static/js/main.js';
-import * as Icons from '@/components/icons/Icons'
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import { handle_moible_menu } from "@/static/js/moiblemenu.js";
-import { handle_scroll } from "@/static/js/scroll.js";
-let unbind;
-onMounted(() => {unbind = handle_moible_menu(),handle_scroll();});
-onUnmounted(() => {unbind && unbind();});
-
-
-
-import NotFound from '@/pages/NotFound.vue'
-import About from '@/pages/About.vue'
-import Photo from '@/pages/Photo.vue'
-// 路由表
-const routes: Record<string, any> = {
-  '/about': About,
- '/photo': Photo}
-// 当前路径（去掉 hash）
-const currentPath = ref(window.location.hash)
-// 当前视图：根据 hash 计算要渲染的组件
-const currentView = computed(() => {return routes[currentPath.value.slice(1) || '/'] || NotFound})
-// 监听 hash 变化
-function onHashChange() {currentPath.value = window.location.hash}
-onMounted(() => {window.addEventListener('hashchange', onHashChange)})
-onUnmounted(() => {window.removeEventListener('hashchange', onHashChange)})
-</script>
-
-
 <template>
-    <div class="preloader" style="opacity: 0; display: none;">
-      <div class="loader"></div>
-    </div>
-    <div class="header">
-      <div class="header_container">
-         <a class="header_logo">
-          <!-- <IconHome/> -->
-          <component :is="Icons.IconHome" />
-          <div class="content">
-            <img src="@/assets/favicon.ico" alt="" srcset="">WX
-          </div>
-         </a>
-         <div class="nav_home_container">
-            <div class="nav_item">
-               <a>标签</a>            
-            </div>
-            <div class="nav_item">
-               <a>分类<component :is="Icons.IconBottom" /></a>
-               <ul>
-                  <li><a>记录点滴</a></li>
-                  <li><a>灵感相关</a></li>
-                  <li><a>闲言碎语</a></li>
-                  <li><a>实用分享</a></li>
-                </ul>
-            </div>
-            <div class="nav_item">
-               <a>页面<component :is="Icons.IconBottom" /></a>
-                <ul>
-                  <li><a href="#/photo">相册</a></li>
-                  <li><a href="#/about">关于</a></li>
-                  <li><a>友链</a></li>
-                  <li><a>留言</a></li>
-                </ul>
-            </div>
-         </div>
-         <div class="header_icon_container">
-             <a class="header_icon">
-               <component :is="Icons.IconKaiWang" />
-            </a>            
-            <div id="seach_btn" class="header_icon">
-                <component :is="Icons.IconSearch" />
-            </div>
-            <div id="user" onclick="window.location.href=&#39;/admin&#39;" class="header_icon">
-               <component :is="Icons.IconUser" />
-            </div>
-            <div id="sidebar_open" class="header_icon">
-                <component :is="Icons.IconMore" />
-            </div>
-        </div>
-      </div>
-    </div>
-    <div class="sidebar">
-      <div class="main">
-         <div class="sidebar_infor">
-            <div class="logo">
-               <div class="logo_tips">👏</div>
-            </div>
-            <div class="infor">
-                <div class="item">
-                  <p>文章</p>
-                  <p>23</p>
-               </div>
-               <div class="item">
-                  <p>标签</p>
-                  <p>25</p>
-               </div>
-               <div class="item">
-                  <p>评论</p>
-                  <p>504</p>
-               </div>
-            </div>
-         </div>
-         <div class="title">
-            分类
-         </div>
-         <ul>
-            <li><a>记录点滴</a></li>
-            <li><a>灵感相关</a></li>
-            <li><a>闲言碎语</a></li>
-            <li><a>实用分享</a></li>
-         </ul>
-         <div class="title">
-            页面
-         </div>
-         <ul>
-            <li><a>相册</a></li>
-            <li><a>关于</a></li>
-            <li><a>友链</a></li>
-            <li><a>留言</a></li>
-         </ul>
-         <div class="tags">
-            <div class="tag"><a>#开源</a></div>
-            <div class="tag"><a>#Typecho</a></div>
-            <div class="tag"><a>#阿里云</a></div>
-            <div class="tag"><a>#主机</a></div>
-            <div class="tag"><a>#高中</a></div>
-            <div class="tag"><a>#高考</a></div>
-            <div class="tag"><a>#主页</a></div>
-            <div class="tag"><a>#html</a></div>
-            <div class="tag"><a>#css</a></div>
-            <div class="tag"><a>#PHP</a></div>
-        </div>
-    </div>
-    </div>
-    <!-- <section class="wx-hero">
+            <section class="wx-hero">
       <div class="main">
         <img src="@/static/img/wx-hero.jpg" class="avatar" alt="头像" />
         <div class="content">
@@ -415,23 +277,19 @@ onUnmounted(() => {window.removeEventListener('hashchange', onHashChange)})
         <li><a>2</a></li>
         <li><a>»</a></li>
       </ul>
-    </div> -->
-    <component :is="currentView" />
-    <div class="footer">
-        <div class="footer_container">
-          <div class="left">
-              <p>Zyyo © 2024</p>
-              <a>你的备案号</a>
-          </div>
-          <div class="right">
-              <!-- 如果不喜欢可以换成你自己的 -->
-              <p><a>Designed by Zyyo</a></p>
-              <p><a>Powered by typecho</a></p>
-          </div>
-      </div>
     </div>
 </template>
 
+<script setup lang="ts">
+import '@/static/js/main.js';
+import * as Icons from '@/components/icons/Icons'
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { handle_moible_menu } from "@/static/js/moiblemenu.js";
+import { handle_scroll } from "@/static/js/scroll.js";
+let unbind;
+onMounted(() => {unbind = handle_moible_menu(),handle_scroll();});
+onUnmounted(() => {unbind && unbind();});
+</script>
 
 <style>
 #mount {
@@ -460,7 +318,6 @@ onUnmounted(() => {window.removeEventListener('hashchange', onHashChange)})
   --transition: 0.2s ease-in-out;
   --modal-overlay-backdrop-filter: blur(0.25rem);
 }
-
 
 .container,
 .container-fluid {

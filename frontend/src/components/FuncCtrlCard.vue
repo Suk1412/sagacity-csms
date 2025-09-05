@@ -16,10 +16,7 @@
     @click="toggle()"
     title="打开工具栏"
   >
-    <!-- 默认小箭头图标 -->
-    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-      <path d="M11 5l7 7-7 7V5z" fill="currentColor"/>
-    </svg>
+    <component :is="Icons.IconLeft" />
   </button>
 
   <!-- 右侧滑出面板 -->
@@ -31,24 +28,23 @@
     role="complementary"
     aria-label="侧边工具栏"
   >
-    <header class="panel__header">
-      <h4 class="panel__title">快捷操作</h4>
-      <button class="panel__close" type="button" @click="close()" aria-label="关闭侧栏">×</button>
-    </header>
-
-    <div class="panel__content">
-      <button class="btn" @click="onAction('A')">按钮 A</button>
-      <button class="btn" @click="onAction('B')">按钮 B</button>
-      <button class="btn" @click="onAction('C')">按钮 C</button>
+    <div class="panel_content">
+      <button class="btn top" @click="onAction('A')"><component :is="Icons.IconFileAdd" /></button>
+      <button class="btn middle" @click="onAction('B')"><component :is="Icons.IconFileDow" /></button>
+      <button class="btn footer" @click="onAction('C')"><component :is="Icons.IconFileRm" /></button>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import * as Icons from '@/components/icons/Icons'
 
 const isOpen = ref(false)
 let closeTimer: number | null = null
+
+const panelRef = ref<HTMLElement | null>(null)
+const hintRef  = ref<HTMLButtonElement | null>(null)
 
 function open() {
   isOpen.value = true
@@ -61,7 +57,7 @@ function close() {
 function toggle() {
   isOpen.value ? close() : open()
 }
-function scheduleAutoClose(delay = 600) {
+function scheduleAutoClose(delay = 100) {
   cancelAutoClose()
   closeTimer = window.setTimeout(() => (isOpen.value = false), delay)
 }
@@ -73,16 +69,52 @@ function cancelAutoClose() {
 }
 
 /* 额外：当鼠标接近屏幕最右边（8px内）也自动打开 */
-function handleMouseMove(e: MouseEvent) {
+function handleMouseMoveOpen(e: MouseEvent) {
   const x = e.clientX
   const w = window.innerWidth
   if (!isOpen.value && x >= w - 8) open()
 }
+
+
+/* 新增：远离右边缘并且不在面板/提示图标上，则计划收起 */
+function handleMouseMoveClose(e: MouseEvent) {
+  if (!isOpen.value) return
+
+  const x = e.clientX
+  const w = window.innerWidth
+  const away = x < w - 120; // 远离右边 120px（可调）
+
+  const target = e.target as Node | null
+  const inPanel = !!(panelRef.value && target && panelRef.value.contains(target))
+  const inHint  = !!(hintRef.value  && target && hintRef.value.contains(target))
+
+  if (away && !inPanel && !inHint) {
+    scheduleAutoClose(100) // 稍微延时，避免抖动
+  } else {
+    // 仍在边缘/面板/提示上，取消关闭
+    cancelAutoClose()
+  }
+}
+
+function handleDocumentClick(e: MouseEvent) {
+  if (!isOpen.value) return
+  const target = e.target as Node | null
+  const inPanel = !!(panelRef.value && target && panelRef.value.contains(target))
+  const inHint  = !!(hintRef.value  && target && hintRef.value.contains(target))
+  if (!inPanel && !inHint) close()
+}
+
+
+
 onMounted(() => {
-  window.addEventListener('mousemove', handleMouseMove, { passive: true })
+  window.addEventListener('mousemove', handleMouseMoveOpen,  { passive: true })
+  window.addEventListener('mousemove', handleMouseMoveClose, { passive: true })
+  document.addEventListener('click', handleDocumentClick, { capture: true })
 })
 onUnmounted(() => {
-  window.removeEventListener('mousemove', handleMouseMove)
+  window.removeEventListener('mousemove', handleMouseMoveOpen)
+  window.removeEventListener('mousemove', handleMouseMoveClose)
+  document.removeEventListener('click', handleDocumentClick, { capture: true })
   cancelAutoClose()
 })
 
@@ -108,13 +140,14 @@ function onAction(name: string) {
 /* 边缘提示图标（小圆按钮） */
 .edge-hint {
   position: fixed;
-  right: 6px;
-  top: 140px;               /* 垂直位置可按需调 */
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
+  right: 0;                /* 紧贴右边缘 */
+  top: 35%;
+  width: 24px;             /* 半圆宽度（比高度小一半） */
+  height: 48px;            /* 半圆高度 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px 0 0 24px;   /* 左侧圆角，右侧直边 */
   border: 1px solid #e6e6e6;
   background: #fff;
   color: #666;
@@ -123,6 +156,7 @@ function onAction(name: string) {
   cursor: pointer;
   transition: transform .18s ease, box-shadow .18s ease;
 }
+
 .edge-hint:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.16);
@@ -131,10 +165,8 @@ function onAction(name: string) {
 /* 面板：右侧滑出（初始在屏外） */
 .panel {
   position: fixed;
-  top: 0;
+  top: 35%;
   right: 0;
-  width: 320px;             /* 展开后的宽度 */
-  height: 100vh;
   background: #ffffff;
   border-left: 1px solid #eaeaea;
   box-shadow: -6px 0 24px rgba(0,0,0,0.08);
@@ -158,33 +190,10 @@ function onAction(name: string) {
   box-shadow: -10px 0 28px rgba(0,0,0,0.12);
 }
 
-.panel__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 14px 10px;
-  border-bottom: 1px solid #f0f0f0;
-}
-.panel__title {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-}
-.panel__close {
-  border: none;
-  background: transparent;
-  font-size: 20px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 4px 8px;
-  color: #999;
-}
-.panel__close:hover { color: #666; }
 
-.panel__content {
-  padding: 16px;
+.panel_content {
+  /* padding: 16px; */
   display: grid;
-  gap: 10px;
 }
 
 /* 三个按钮示例 */
@@ -193,11 +202,17 @@ function onAction(name: string) {
   border: 1px solid #e5e7eb;
   background: #f9fafb;
   color: #111827;
-  border-radius: 10px;
   padding: 10px 12px;
   cursor: pointer;
   transition: background .18s ease, transform .06s ease, box-shadow .18s ease;
 }
+.btn.top {
+  border-radius: 20px 0 0 0px;
+}
+.btn.footer {
+  border-radius: 0px 0 0 20px;
+}
+
 .btn:hover {
   background: #f3f4f6;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);

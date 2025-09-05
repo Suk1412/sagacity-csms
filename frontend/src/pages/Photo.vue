@@ -73,7 +73,6 @@
 </template>
 
 <script setup lang="ts">
-import '@/static/css/post.css';
 import '@/static/css/other.css';
 import * as Icons from '@/components/icons/Icons'
 </script>

@@ -158,6 +158,7 @@
                     </div>
                 </div>
             </div>
+            <!-- <About /> -->
             <div id="respond-page-3" class="post_comment">
                 <div class="title"><component :is="Icons.IconMessage"/>评论</div>
                     <form class="comment_card" id="comment-form" method="post" action="https://zyyo.net/about.html/comment">
@@ -191,8 +192,8 @@
 </template>
 
 <script setup lang="ts">
-import '@/static/css/post.css';
 import * as Icons from '@/components/icons/Icons'
+// import About from '@/components/writings/About.vue'
 </script>
 
 <style scoped>
