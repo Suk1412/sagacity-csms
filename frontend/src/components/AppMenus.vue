@@ -1,8 +1,38 @@
 <script setup lang="ts">
+import axios from 'axios'
+import { ref, onMounted } from 'vue'
 import '@/static/css/index.css';
 import '@/static/css/post.css';
 import '@/static/js/main.js';
 import * as Icons from '@/components/icons/Icons'
+
+
+import UserLogin from '@/components/UserLogin.vue'
+const showLogin = ref(false)
+const userBtnRef = ref<HTMLElement | null>(null)
+function toggleLogin() {showLogin.value = !showLogin.value}
+function onUserSubmit(payload: { username: string; password: string }) {
+  console.log('提交登录：', payload)
+  showLogin.value = false
+}
+onMounted(() => {
+  userBtnRef.value = document.getElementById('user') as HTMLElement | null
+})
+
+async function handleLogin({ username, password }: { username: string, password: string }) {
+  try {
+    const response = await axios.post('http://localhost:3000/login', {
+      username,
+      password
+    })
+
+    alert('✅ 登录成功：' + response.data.message)
+    showLogin.value = false
+
+  } catch (err: any) {
+    alert('❌ 登录失败：' + (err.response?.data?.message || '未知错误'))
+  }
+}
 </script>
 
 <template>
@@ -44,7 +74,7 @@ import * as Icons from '@/components/icons/Icons'
             <div id="seach_btn" class="header_icon">
                 <component :is="Icons.IconSearch" />
             </div>
-            <div id="user" onclick="window.location.href=&#39;/admin&#39;" class="header_icon">
+            <div id="user" class="header_icon" ref="userBtnRef" @click.stop="toggleLogin">
                <component :is="Icons.IconUser" />
             </div>
             <div id="sidebar_open" class="header_icon">
@@ -53,5 +83,11 @@ import * as Icons from '@/components/icons/Icons'
         </div>
       </div>
     </div>
+      <!-- 独立弹层组件 -->
+   <UserLogin
+      v-model="showLogin"
+      :anchor-el="userBtnRef"
+      @submit="onUserSubmit"
+   />
 </template>
 
