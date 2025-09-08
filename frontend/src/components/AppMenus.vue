@@ -87,7 +87,7 @@ async function handleLogin({ username, password }: { username: string, password:
    <UserLogin
       v-model="showLogin"
       :anchor-el="userBtnRef"
-      @submit="onUserSubmit"
+      @submit="handleLogin"
    />
 </template>
 

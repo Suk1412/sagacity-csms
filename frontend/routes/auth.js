@@ -1,19 +1,22 @@
-const express = require('express');
+
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const mysql = require('mysql2');
+import bcrypt from 'bcrypt'
+import express from 'express'
+import mysql from 'mysql2'
 
 // 建议把连接单独封装，这里简写
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'wangxiao',
   password: '2472532732',
-  database: 'your_database'
+  database: 'sagacityapp',
+  port: 3306
 });
 
 
 // 登录接口
 router.post('/login', (req, res) => {
+  console.log('收到登录请求，数据:', req.body)
   const { username, password } = req.body;
 
   if (!username || !password)
@@ -27,12 +30,14 @@ router.post('/login', (req, res) => {
       return res.status(401).json({ message: '用户不存在' });
 
     const user = results[0];
-    const match = await bcrypt.compare(password, user.password);
+    const combined = username + password
+    const isMatch = await bcrypt.compare(combined, user.password_hash)
+    if (!isMatch) {
+      return res.status(401).json({ message: '密码错误' })
+    };
 
-    if (!match) return res.status(401).json({ message: '密码错误' });
-
-    res.json({ message: '登录成功', user: { id: user.id, username: user.username } });
+    return res.json({ message: '登录成功'});
   });
 });
 
-module.exports = router;
+export default router

@@ -1,15 +1,15 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import authRoutes from './routes/auth.js';
 
 const app = express();
-const port = 3306;
+const port = 3000;
 
 //  中间件
 app.use(cors());
 app.use(express.json());
 
 // 引入 auth 路由
-const authRoutes = require('@/routes/auth');
 app.use('/', authRoutes); // 路由挂载
 
 // 启动服务器
