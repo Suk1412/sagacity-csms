@@ -31,3 +31,5 @@ export { default as IconSubmit } from './IconSubmit.vue'
 export { default as IconFileAdd } from './IconFileAdd.vue'
 export { default as IconFileDow } from './IconFileDow.vue'
 export { default as IconFileRm } from './IconFileRm.vue'
+
+export { default as IconExit } from './IconExit.vue'

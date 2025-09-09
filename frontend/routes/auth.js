@@ -4,13 +4,14 @@ import bcrypt from 'bcrypt'
 import express from 'express'
 import mysql from 'mysql2'
 
+
 // 建议把连接单独封装，这里简写
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'wangxiao',
   password: '2472532732',
   database: 'sagacityapp',
-  port: 3306
+  // port: 3306
 });
 
 
