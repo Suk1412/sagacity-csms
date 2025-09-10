@@ -1,41 +1,40 @@
 <template>
-    <!-- 只有在有锚点且需要显示时才渲染，避免定位为 0,0 -->
-    <div
-      v-if="modelValue && anchorPosition"
-      ref="root"
-      class="user-login"
-      :style="inlineStyle"
-      role="dialog"
-      aria-label="用户登录"
-      @click.stop
-      @keydown.esc.prevent.stop="close()"
-    >
-      <form class="user-form" @submit.prevent="submit">
-        <label class="field">
-          <span>用户名</span>
-          <input
-            ref="userInput"
-            v-model="username"
-            type="text"
-            placeholder="请输入用户名"
-            required
-          />
-        </label>
-        <label class="field">
-          <span>密码</span>
-          <input
-            v-model="password"
-            type="password"
-            placeholder="请输入密码"
-            required
-          />
-        </label>
-        <div class="button-row">
-          <button class="confirm-btn" type="submit">确认</button>
-          <button class="confirm-btn" type="button" @click="switchToRegister">注册</button>
-        </div>
-      </form>
-    </div>
+  <div
+    v-if="modelValue && anchorPosition"
+    ref="root"
+    class="user-login"
+    :style="inlineStyle"
+    role="dialog"
+    aria-label="用户登录"
+    @click.stop
+    @keydown.esc.prevent.stop="close()"
+  >
+    <form class="user-form" @submit.prevent="submit">
+      <label class="field">
+        <span>用户名</span>
+        <input
+          ref="userInput"
+          v-model="username"
+          type="text"
+          placeholder="请输入用户名"
+          required
+        />
+      </label>
+      <label class="field">
+        <span>密码</span>
+        <input
+          v-model="password"
+          type="password"
+          placeholder="请输入密码"
+          required
+        />
+      </label>
+      <div class="button-row">
+        <button class="confirm-btn" type="submit">确认</button>
+        <button class="confirm-btn" type="button" @click="switchToRegister">注册</button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -66,8 +65,6 @@ const inlineStyle = computed(() => {
     zIndex: 10000
   }
 })
-
-
 
 function close() { emit('update:modelValue', false) }
 function submit() { 

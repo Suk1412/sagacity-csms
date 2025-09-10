@@ -5,27 +5,17 @@
     class="user-login"
     :style="inlineStyle"
     role="dialog"
-    aria-label="用户登录或注册"
+    aria-label="用户注册"
     @click.stop
     @keydown.esc.prevent.stop="close()"
   >
     <form class="user-form" @submit.prevent="submit">
-        <!-- 注册界面 -->
         <label class="field">
             <span>用户名</span>
             <input
             v-model="username"
             type="text"
             placeholder="请输入用户名"
-            required
-            />
-        </label>
-        <label class="field">
-            <span>邮箱</span>
-            <input
-            v-model="email"
-            type="email"
-            placeholder="请输入邮箱"
             required
             />
         </label>
@@ -49,7 +39,7 @@
         </label>
 
         <div class="button-row">
-            <button class="confirm-btn" type="submit">{{ isRegistering ? '注册' : '提交' }}</button>
+            <button class="confirm-btn" type="submit">提交</button>
         </div>
     </form>
   </div>
@@ -61,41 +51,28 @@ import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
 const emit = defineEmits<{
   'update:modelValue': [boolean]
   'submit': [{ username: string; password: string }]
-  'register': [{ username: string; password: string; email: string }]
+  'register': [{ username: string; password: string;}]
 }>()
 
 const root = ref<HTMLElement | null>(null)
 const userInput = ref<HTMLInputElement | null>(null)
 const username = ref('')
 const password = ref('')
-const email = ref('')
 const confirmPassword = ref('')
 const isRegistering = ref(false)
 
 const props = defineProps<{
   modelValue: boolean
-  anchorPosition?: { top: number; left: number }
+  anchorPosition: { top: number; left: number }
 }>()
 
 const inlineStyle = computed(() => {
-  if (isRegistering.value || !props.anchorPosition) {
-    // 注册模式或无锚点，居中显示
     return {
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      zIndex: 10000
-    }
-  } else {
-    // 登录模式时基于锚点定位
-    return {
-      position: 'fixed',
-      top: `${props.anchorPosition.top + 10}px`,
-      left: `${props.anchorPosition.left}px`,
-      transform: 'translate(-100%, 0)',
-      zIndex: 10000
-    }
+    position: 'fixed',
+    top: `${props.anchorPosition.top + 10}px`,
+    left: `${props.anchorPosition.left}px`,
+    transform: 'translate(-100%, 0)',
+    zIndex: 10000
   }
 })
 
@@ -113,7 +90,6 @@ function submit() {
     emit('register', {
       username: username.value,
       password: password.value,
-      email: email.value
     })
   } else {
     emit('submit', {
@@ -165,15 +141,9 @@ onUnmounted(() => {
   z-index: 10000;
 }
 
-@keyframes popIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -56%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
+@keyframes popIn{
+  from{opacity:0; transform:translate(-100%,-6px)}
+  to{opacity:1; transform:translate(-100%,0)}
 }
 
 .user-form {

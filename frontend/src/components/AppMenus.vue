@@ -53,6 +53,7 @@ const anchorPosition = reactive({top: 0,left: 0})
 function toggleLogin() {
   updateAnchorPosition()
   showLogin.value = !showLogin.value
+  showRegister.value = false
 }
 
 const hoverTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
@@ -173,8 +174,6 @@ function switchToRegister() {
                 <img :src='userAvatar' alt="用户头像" />
               </div>
             </template>
-
-
             <div id="sidebar_open" class="header_icon">
                 <component :is="Icons.IconMore" />
             </div>
