@@ -46,10 +46,6 @@ const tagsSorted = tags
 
 // 你可以按需设置哪个 tag 高亮
 const activeTag = defineModel<string>({ default: '' })
-// const activeTag = ref('')
-// function setActive(label: string) {
-//   activeTag.value = (activeTag.value === label ? '' : label)
-// }
 
 function makeTagHref(label: string) {
   // 自行替换为你的路由/链接规则

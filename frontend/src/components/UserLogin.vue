@@ -5,9 +5,10 @@
     :style="popupStyle"
   >
     <ul class="popup-menu">
-      <li><a>我的主页</a></li>
-      <li class="pb-8"><a>设置</a></li>
-      <li class="pt-8"><p><a class="exit_li" @click="$emit('logout')"><img src="@/static/svg/exit.svg" alt="退出图标" />退出登录</a></p></li>
+      <li class="pb-8"><p><a class="exit_li"><img src="@/static/svg/我的主页.svg" alt="我的主页" />我的主页</a></p></li>
+      <li><p><a class="exit_li"><img src="@/static/svg/个人中心.svg" alt="个人中心" />个人中心</a></p></li>
+      <li><p><a class="exit_li"><img src="@/static/svg/内容管理.svg" alt="内容管理" />内容管理</a></p></li>
+      <li class="pt-8"><p><a class="exit_li" @click="$emit('logout')"><img src="@/static/svg/退出登录.svg" alt="退出登录" />退出登录</a></p></li>
     </ul>
   </div>
 </template>
@@ -61,10 +62,11 @@ const popupStyle = computed(() => ({
 
 .popup-menu li.pb-8{
   padding-bottom: 8px;
+  border-bottom: 1px solid #d3dae2;
 }
 .popup-menu li.pt-8{
   padding-top: 8px;
-  border-top: 1px solid #f6f7f8;
+  border-top: 1px solid #d3dae2;
 }
 
 .popup-menu li a.exit_li {

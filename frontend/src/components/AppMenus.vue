@@ -7,10 +7,13 @@ import '@/static/js/main.js';
 import * as Icons from '@/components/icons/Icons'
 import UserLoging from '@/components/UserLoging.vue'
 import UserLogin from '@/components/UserLogin.vue'
+import UserRegister from '@/components/UserRegister.vue'
 const isLoggedIn = ref(false)
 const loggedInUser = ref('')
 const showLogin = ref(false)
+const showRegister = ref(false)
 const showHoverPopup = ref(false)
+const userAvatar = ref('') // 登录后的用户头像
 
 
 async function handleLogin({ username, password }: { username: string, password: string }) {
@@ -19,10 +22,17 @@ async function handleLogin({ username, password }: { username: string, password:
       username,
       password
     })
-    alert('✅ 登录成功：' + response.data.message)
     isLoggedIn.value = true
     loggedInUser.value = username
+    userAvatar.value = response.data.avatar || ''
     showLogin.value = false
+
+    localStorage.setItem('user', JSON.stringify({
+      username: loggedInUser.value,
+      avatar: userAvatar.value
+    }));
+
+
   } catch (err: any) {
       if (err.response?.data?.message) {
       alert('❌ 登录失败：' + err.response.data.message);
@@ -38,7 +48,6 @@ async function handleLogin({ username, password }: { username: string, password:
 
 // 登录按钮位置
 const anchorPosition = reactive({top: 0,left: 0})
-// const hoverPosition = reactive({ top: 0, left: 0 })
 
 // 切换登录弹窗
 function toggleLogin() {
@@ -76,6 +85,10 @@ function handleLogout() {
   isLoggedIn.value = false
   loggedInUser.value = ''
   showHoverPopup.value = false
+  userAvatar.value = '';
+  // ✅ 清除本地存储
+  localStorage.removeItem('user');
+
 }
 
 
@@ -90,11 +103,25 @@ function updateAnchorPosition() {
 }
 // 监听窗口变化时更新位置
 onMounted(() => {
+  // 获取本地存储的用户信息
+  const saved = localStorage.getItem('user');
+  if (saved) {
+    const userData = JSON.parse(saved);
+    isLoggedIn.value = true;
+    loggedInUser.value = userData.username;
+    userAvatar.value = userData.avatar;
+  }
   window.addEventListener('resize', updateAnchorPosition)
 })
 onUnmounted(() => {
   window.removeEventListener('resize', updateAnchorPosition)
 })
+
+
+function switchToRegister() {
+  showLogin.value = false
+  showRegister.value = true
+}
 </script>
 
 <template>
@@ -143,7 +170,7 @@ onUnmounted(() => {
             </template>
             <template v-if="isLoggedIn">
               <div id="user" class="header_icon user_avatar"  @mouseenter="handleMouseEnter"  @mouseleave="handleMouseLeave">
-                <img src='@/static/img/wx-hero.jpg'>
+                <img :src='userAvatar' alt="用户头像" />
               </div>
             </template>
 
@@ -156,12 +183,15 @@ onUnmounted(() => {
     </div>
       <!-- 独立弹层组件 -->
 
+  <!-- 登录弹窗 -->
   <UserLoging
       v-model="showLogin"
       :anchor-position="anchorPosition"
       @submit="handleLogin"
+      @switch-to-register="switchToRegister"
   />
 
+  <!-- 已登录状态下显示的弹窗 -->
   <UserLogin
     v-model="showHoverPopup"
     :anchor-position="anchorPosition"
@@ -170,5 +200,11 @@ onUnmounted(() => {
     @logout="handleLogout"
   />
 
+  <!-- 注册用户弹窗 -->
+  <UserRegister
+    v-model="showRegister"
+    :anchor-position="anchorPosition"
+    @close="showRegister = false"
+  />
 </template>
 

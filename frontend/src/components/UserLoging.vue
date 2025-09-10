@@ -1,5 +1,4 @@
 <template>
-  <!-- <teleport to="body"> -->
     <!-- 只有在有锚点且需要显示时才渲染，避免定位为 0,0 -->
     <div
       v-if="modelValue && anchorPosition"
@@ -31,10 +30,12 @@
             required
           />
         </label>
-        <button class="confirm-btn" type="submit">确认</button>
+        <div class="button-row">
+          <button class="confirm-btn" type="submit">确认</button>
+          <button class="confirm-btn" type="button" @click="switchToRegister">注册</button>
+        </div>
       </form>
     </div>
-  <!-- </teleport> -->
 </template>
 
 <script setup lang="ts">
@@ -43,6 +44,7 @@ import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
 const emit = defineEmits<{
   'update:modelValue': [boolean]
   'submit': [{ username: string; password: string }]
+  'switch-to-register': []  // 添加这个事件
 }>()
 
 const root = ref<HTMLElement | null>(null)
@@ -65,10 +67,18 @@ const inlineStyle = computed(() => {
   }
 })
 
+
+
 function close() { emit('update:modelValue', false) }
 function submit() { 
    emit('submit', { username: username.value, password: password.value }) 
 }
+
+function switchToRegister() {
+  emit('update:modelValue', false) // 关闭登录框
+  emit('switch-to-register')       // 通知父组件切换到注册界面
+}
+
 
 /** 打开时聚焦用户名 */
 watch(() => props.modelValue, async v => {
@@ -139,8 +149,12 @@ function updateAnchorPosition() {
 .field input:focus{
   border-color:#93c5fd; box-shadow:0 0 0 3px rgba(147,197,253,.35);
 }
+.button-row {
+  display: flex;
+  gap: 10px; /* 按钮之间的间距，可根据需要调整 */
+}
 .confirm-btn{
-  height:36px; border:0; border-radius:8px; background:#06dae9; color:#fff; cursor:pointer;
+  height:36px; border:0; border-radius:8px; background:#06dae9; color:#fff; cursor:pointer; width: 50%;
   transition:transform .05s ease, box-shadow .18s ease, background .18s ease;
 }
 .confirm-btn:active{ transform:translateY(1px) }

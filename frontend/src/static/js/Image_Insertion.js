@@ -12,8 +12,8 @@ const connection = mysql.createConnection({
 });
 
 // 2. 读取图片为 Buffer（二进制数据）
-const imagePath = 'wx-hero.jpg';
-const userId = 1;
+const imagePath = '/home/wx/Documents/Zyyo_yuan/Zyyo_files/logo.jpg';
+const userId = 2;
 const avatarData = fs.readFileSync(imagePath);
 
 

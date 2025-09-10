@@ -1,0 +1,221 @@
+<template>
+  <div
+    v-if="modelValue && anchorPosition"
+    ref="root"
+    class="user-login"
+    :style="inlineStyle"
+    role="dialog"
+    aria-label="用户登录或注册"
+    @click.stop
+    @keydown.esc.prevent.stop="close()"
+  >
+    <form class="user-form" @submit.prevent="submit">
+        <!-- 注册界面 -->
+        <label class="field">
+            <span>用户名</span>
+            <input
+            v-model="username"
+            type="text"
+            placeholder="请输入用户名"
+            required
+            />
+        </label>
+        <label class="field">
+            <span>邮箱</span>
+            <input
+            v-model="email"
+            type="email"
+            placeholder="请输入邮箱"
+            required
+            />
+        </label>
+        <label class="field">
+            <span>密码</span>
+            <input
+            v-model="password"
+            type="password"
+            placeholder="请输入密码"
+            required
+            />
+        </label>
+        <label class="field">
+            <span>确认密码</span>
+            <input
+            v-model="confirmPassword"
+            type="password"
+            placeholder="请再次输入密码"
+            required
+            />
+        </label>
+
+        <div class="button-row">
+            <button class="confirm-btn" type="submit">{{ isRegistering ? '注册' : '提交' }}</button>
+        </div>
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
+
+const emit = defineEmits<{
+  'update:modelValue': [boolean]
+  'submit': [{ username: string; password: string }]
+  'register': [{ username: string; password: string; email: string }]
+}>()
+
+const root = ref<HTMLElement | null>(null)
+const userInput = ref<HTMLInputElement | null>(null)
+const username = ref('')
+const password = ref('')
+const email = ref('')
+const confirmPassword = ref('')
+const isRegistering = ref(false)
+
+const props = defineProps<{
+  modelValue: boolean
+  anchorPosition?: { top: number; left: number }
+}>()
+
+const inlineStyle = computed(() => {
+  if (isRegistering.value || !props.anchorPosition) {
+    // 注册模式或无锚点，居中显示
+    return {
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      zIndex: 10000
+    }
+  } else {
+    // 登录模式时基于锚点定位
+    return {
+      position: 'fixed',
+      top: `${props.anchorPosition.top + 10}px`,
+      left: `${props.anchorPosition.left}px`,
+      transform: 'translate(-100%, 0)',
+      zIndex: 10000
+    }
+  }
+})
+
+function close() {
+  emit('update:modelValue', false)
+  isRegistering.value = false // 返回登录模式
+}
+
+function submit() {
+  if (isRegistering.value) {
+    if (password.value !== confirmPassword.value) {
+      alert('两次输入的密码不一致')
+      return
+    }
+    emit('register', {
+      username: username.value,
+      password: password.value,
+      email: email.value
+    })
+  } else {
+    emit('submit', {
+      username: username.value,
+      password: password.value
+    })
+  }
+}
+
+function toggleMode() {
+  isRegistering.value = !isRegistering.value
+}
+
+/** 打开时聚焦用户名 */
+watch(() => props.modelValue, async v => {
+  if (v) {
+    await nextTick()
+    userInput.value?.focus()
+  }
+})
+
+// 点击外部关闭
+function onDocClick(e: MouseEvent) {
+  const el = root.value
+  if (!el) return
+  const t = e.target as Node
+  if (el.contains(t)) return
+  close()
+}
+
+onMounted(() => {
+  document.addEventListener('click', onDocClick)
+})
+onUnmounted(() => {
+  document.removeEventListener('click', onDocClick)
+})
+</script>
+
+<style scoped>
+.user-login {
+  min-width: 300px;
+  max-width: 360px;
+  padding: 14px 14px 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  animation: popIn 0.16s ease-out;
+  z-index: 10000;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -56%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.user-form {
+  display: grid;
+  gap: 12px;
+}
+.field {
+  display: grid;
+  gap: 6px;
+}
+.field span {
+  font-size: 12px;
+  color: #6b7280;
+}
+.field input {
+  height: 36px;
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  outline: 0;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.field input:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.35);
+}
+.button-row {
+  display: flex;
+  gap: 10px;
+}
+.confirm-btn {
+  flex: 1;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: #06dae9;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.05s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.confirm-btn:active {
+  transform: translateY(1px);
+}
+</style>
