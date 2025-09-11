@@ -10,43 +10,55 @@
     @keydown.esc.prevent.stop="close()"
   >
     <form class="user-form" @submit.prevent="submit">
-        <label class="field">
-            <span>用户名</span>
-            <input
-            v-model="username"
-            type="text"
-            placeholder="请输入用户名"
-            required
-            />
-        </label>
-        <label class="field">
-            <span>密码</span>
-            <input
-            v-model="password"
-            type="password"
-            placeholder="请输入密码"
-            required
-            />
-        </label>
-        <label class="field">
-            <span>确认密码</span>
-            <input
-            v-model="confirmPassword"
-            type="password"
-            placeholder="请再次输入密码"
-            required
-            />
-        </label>
+      <label class="field">
+        <span>用户名</span>
+        <input
+        ref = "userInput"
+        v-model="username"
+        type="text"
+        placeholder="请输入用户名"
+        required
+        autocomplete="username"
+        />
+      </label>
+      <label class="field">
+        <span>密码</span>
+        <input
+          v-model="password"
+          type="password"
+          placeholder="请输入密码"
+          required
+          autocomplete="new-password"
+        />
+      </label>
+      <label class="field">
+        <span>确认密码</span>
+        <input
+          v-model="confirmPassword"
+          type="password"
+          placeholder="请再次输入密码"
+          required
+          autocomplete="new-password"
+          />
+      </label>
+      <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+      <p v-if="okMsg" class="ok">{{ okMsg }}</p>
 
-        <div class="button-row">
-            <button class="confirm-btn" type="submit">提交</button>
-        </div>
+      <div class="button-row">
+          <button class="confirm-btn" type="submit">提交</button>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
+import axios from 'axios'
+
+// 顶部可复用 axios 实例（可用 VITE_API_BASE 设置后端地址）
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE || '' // 例如 http://localhost:3000
+})
 
 const emit = defineEmits<{
   'update:modelValue': [boolean]
@@ -60,6 +72,9 @@ const username = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const isRegistering = ref(false)
+
+const errorMsg = ref('')
+const okMsg = ref('')
 
 const props = defineProps<{
   modelValue: boolean
@@ -76,31 +91,35 @@ const inlineStyle = computed(() => {
   }
 })
 
+function resetMsg() {
+  errorMsg.value = ''
+  okMsg.value = ''
+}
+
 function close() {
   emit('update:modelValue', false)
   isRegistering.value = false // 返回登录模式
+  resetMsg()
 }
 
-function submit() {
-  if (isRegistering.value) {
-    if (password.value !== confirmPassword.value) {
-      alert('两次输入的密码不一致')
-      return
-    }
-    emit('register', {
-      username: username.value,
-      password: password.value,
-    })
-  } else {
-    emit('submit', {
+async function submit() {
+  resetMsg()
+  if (password.value !== confirmPassword.value) {
+    errorMsg.value = '两次输入的密码不一致'
+    return
+  }
+  try{
+    // 假设你的后端注册路由为 /register
+    await api.post('http://localhost:3000/register', {
       username: username.value,
       password: password.value
     })
+    okMsg.value = '注册成功'
+    emit('submit', { username: username.value, password: password.value }) // 可选
+    close()
+  } catch (err: any) {
+    errorMsg.value = err?.response?.data?.message || err?.message || '注册失败'
   }
-}
-
-function toggleMode() {
-  isRegistering.value = !isRegistering.value
 }
 
 /** 打开时聚焦用户名 */

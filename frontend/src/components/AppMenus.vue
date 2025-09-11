@@ -34,7 +34,7 @@ async function handleLogin({ username, password }: { username: string, password:
 
 
   } catch (err: any) {
-      if (err.response?.data?.message) {
+    if (err.response?.data?.message) {
       alert('❌ 登录失败：' + err.response.data.message);
     } else if (err.response) {
       alert(`❌ 登录失败：HTTP ${err.response.status}`);
