@@ -1,4 +1,3 @@
-// db.js
 import mysql from 'mysql2'
 
 // 创建数据库连接池

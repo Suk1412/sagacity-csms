@@ -4,6 +4,15 @@
     class="hover-popup"
     :style="popupStyle"
   >
+
+    <div class="uesr-info">
+      <img class="user-avatar" :src="userStore.avatar">
+      <div>
+        <p class="user-nickname">{{ userStore.username }}</p>
+        <p class="user-role">管理员</p>
+      </div>
+    </div>
+
     <ul class="popup-menu">
       <li class="pb-8"><p><a class="exit_li"><img src="@/static/svg/我的主页.svg" alt="我的主页" />我的主页</a></p></li>
       <li><p><a class="exit_li"><img src="@/static/svg/个人中心.svg" alt="个人中心" />个人中心</a></p></li>
@@ -15,6 +24,9 @@
 
 <script setup lang="ts">
 import { computed, defineProps, defineEmits } from 'vue'
+import { useUserStore } from '@/store/user'
+const userStore = useUserStore()
+
 
 
 const props = defineProps<{
@@ -41,6 +53,24 @@ const popupStyle = computed(() => ({
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   padding: 8px 0px 8px 0px; 
 }
+
+.uesr-info{
+  display: flex; 
+  align-items: center;
+  padding: 20px 24px;
+  gap: 8px;
+}
+
+.uesr-info .user-avatar{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.uesr-info .user-role{
+  font-size: 12px;
+}
+
 
 .popup-menu {
   width:218px;

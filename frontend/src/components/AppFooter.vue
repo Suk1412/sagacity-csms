@@ -8,11 +8,11 @@ import '@/static/js/main.js';
     <div class="footer">
         <div class="footer_container">
           <div class="left">
-              <p>Zyyo © 2024</p>
+              <p>WX © 2024</p>
               <a>你的备案号</a>
           </div>
           <div class="right">
-              <p><a>Designed by Zyyo</a></p>
+              <p><a>Designed by WX</a></p>
               <p><a>Powered by typecho</a></p>
           </div>
       </div>

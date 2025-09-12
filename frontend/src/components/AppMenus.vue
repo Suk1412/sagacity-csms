@@ -16,9 +16,13 @@ const showRegister = ref(false)
 const showHoverPopup = ref(false)
 const userAvatar = ref('') // 登录后的用户头像
 
+import { useUserStore } from '@/store/user'
+const userStore = useUserStore()
+
 
 async function handleLogin({ username, password }: { username: string, password: string }) {
   try {
+    console.log('GET ->')
     const response = await api.post('/login', {
       username,
       password
@@ -27,7 +31,8 @@ async function handleLogin({ username, password }: { username: string, password:
     loggedInUser.value = username
     userAvatar.value = response.data.avatar || ''
     showLogin.value = false
-
+    userStore.setUser({ username, avatar: response.data.avatar})
+    // await userStore.fetchByUsername(username)
     localStorage.setItem('user', JSON.stringify({
       username: loggedInUser.value,
       avatar: userAvatar.value
@@ -159,7 +164,7 @@ function switchToRegister() {
                <a>页面<component :is="Icons.IconBottom" /></a>
                 <ul>
                   <li><a href="#/photo">相册</a></li>
-                  <li><a href="#/writing">关于</a></li>
+                  <li><a href="#/detail">关于</a></li>
                   <li><a>友链</a></li>
                   <li><a>留言</a></li>
                 </ul>
@@ -202,6 +207,7 @@ function switchToRegister() {
   <UserLogin
     v-model="showHoverPopup"
     :anchor-position="anchorPosition"
+    :avater="userAvatar"
     @mouseenter="handlePopupMouseEnter"
     @mouseleave="handlePopupMouseLeave"
     @logout="handleLogout"

@@ -10,13 +10,13 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 
 import NotFound from '@/pages/NotFound.vue'
 import Home from '@/pages/Home.vue'
-import Writing from '@/pages/Writing.vue'
+import Detail from '@/pages/Detail.vue'
 import Photo from '@/pages/Photo.vue'
 import Title from '@/pages/Title.vue'
 // 路由表
 const routes: Record<string, any> = {
   '/' : Home,
-  '/writing': Writing,
+  '/detail': Detail,
  '/photo': Photo,
  '/title': Title}
 // 当前路径（去掉 hash）

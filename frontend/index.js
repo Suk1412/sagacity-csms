@@ -16,6 +16,4 @@ app.use('/', authRoutes); // 路由挂载
 app.use('/', registerRoutes); // 路由挂载
 
 // 启动服务器
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+app.listen(port, () => {console.log(`Server running at http://localhost:${port}`);});
