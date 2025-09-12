@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios'
+import api from '@/api/http'
 import { ref, reactive, onMounted,onUnmounted } from 'vue'
 import '@/static/css/index.css';
 import '@/static/css/post.css';
@@ -18,7 +19,7 @@ const userAvatar = ref('') // 登录后的用户头像
 
 async function handleLogin({ username, password }: { username: string, password: string }) {
   try {
-    const response = await axios.post('http://localhost:3000/login', {
+    const response = await api.post('/login', {
       username,
       password
     })
@@ -32,7 +33,6 @@ async function handleLogin({ username, password }: { username: string, password:
       avatar: userAvatar.value
     }));
 
-
   } catch (err: any) {
     if (err.response?.data?.message) {
       alert('❌ 登录失败：' + err.response.data.message);
@@ -44,6 +44,14 @@ async function handleLogin({ username, password }: { username: string, password:
       alert('❌ 登录失败：' + err.message);
     }
   }
+}
+
+async function handleRegisterSuccess(payload: { username: string; password: string }) {
+  // 直接调用已有的登录逻辑
+  await handleLogin(payload)
+  // 保险起见，关掉所有弹层
+  showRegister.value = false
+  showLogin.value = false
 }
 
 // 登录按钮位置
@@ -204,6 +212,7 @@ function switchToRegister() {
     v-model="showRegister"
     :anchor-position="anchorPosition"
     @close="showRegister = false"
+    @register="handleRegisterSuccess"
   />
 </template>
 

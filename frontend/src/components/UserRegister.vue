@@ -53,12 +53,8 @@
 
 <script setup lang="ts">
 import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
-import axios from 'axios'
+import api from '@/api/http'
 
-// 顶部可复用 axios 实例（可用 VITE_API_BASE 设置后端地址）
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE || '' // 例如 http://localhost:3000
-})
 
 const emit = defineEmits<{
   'update:modelValue': [boolean]
@@ -110,12 +106,12 @@ async function submit() {
   }
   try{
     // 假设你的后端注册路由为 /register
-    await api.post('http://localhost:3000/register', {
+    await api.post('/register', {
       username: username.value,
       password: password.value
     })
     okMsg.value = '注册成功'
-    emit('submit', { username: username.value, password: password.value }) // 可选
+    emit('register', { username: username.value, password: password.value }) // 可选
     close()
   } catch (err: any) {
     errorMsg.value = err?.response?.data?.message || err?.message || '注册失败'

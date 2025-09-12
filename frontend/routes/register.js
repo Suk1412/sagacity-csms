@@ -4,6 +4,7 @@ import pool from '../db.js'
 import fs from 'fs'
 import path from 'path'
 import { randomBytes } from 'crypto'
+import { kMaxLength } from 'buffer'
 
 const router = express.Router()
 
@@ -28,6 +29,24 @@ function randomString(n = 12) {
   }
   return result
 }
+
+
+function randomChineseString(min_len = 2, max_len = 4) {
+  const length = min_len + Math.floor(Math.random() * (max_len - min_len + 1)) // 2, 3, 4
+  
+  let result = ''
+  const bytes = randomBytes(length * 2) // 取多点字节做随机索引
+  
+  for (let i = 0; i < length; i++) {
+    // 常用汉字范围：\u4e00 - \u9fa5
+    const codePoint = 0x4e00 + (bytes[i] % (0x9fa5 - 0x4e00))
+    result += String.fromCharCode(codePoint)
+  }
+  
+  return result
+}
+
+
 
 const avatarDir = path.join(process.cwd(), 'src/static/img/default_avatar')
 
@@ -75,7 +94,7 @@ router.post('/register', async (req, res) => {
 
     const toHash = uname + password
     const passwordHash = await bcrypt.hash(toHash, SALT_ROUNDS)
-    const nickName = randomString(12)
+    const nickName = randomChineseString(2,4)
 
 
     const avatarfile = randomAvatar()
