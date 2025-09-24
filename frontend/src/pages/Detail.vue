@@ -122,10 +122,6 @@ import About from '@/components/writings/About.vue'
     background-image:url('@/static/img/wx-hero.jpg');
 }
 
-.container {
-    max-width: 1200px;
-}
-
 .post_aside_infor::before {
     background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--color0)), url('@/static/img/wallhaven-6dg7ll.jpg');
 }
