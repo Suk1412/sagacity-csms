@@ -6,7 +6,7 @@
                 <div class="logo">
                     <div class="logo_tips">👏</div>
                 </div>
-                <h2>Wx</h2>
+                <h2>WX</h2>
                 <p>Just for fun</p>
                 <div class="infor">
                     <div class="item">
@@ -163,10 +163,10 @@
             <div id="respond-page-3" class="post_comment">
                 <div class="title"><component :is="Icons.IconMessage"/>评论</div>
                     <form class="comment_card" id="comment-form" method="post" action="https://zyyo.net/about.html/comment">
-                                <input type="text" name="author" placeholder="昵称" required="" class="name" value="dad">
-                    <input type="email" name="mail" placeholder="邮箱" required="" class="mail" value="2472532764@qq.com">
+                                <input type="text" name="author" placeholder="昵称" required class="name" value="dad">
+                    <input type="email" name="mail" placeholder="邮箱" required class="mail" value="2472532764@qq.com">
                     <input type="url" name="url" placeholder="网站" class="url" value="https://blog.csdn.net/weixin_42300435/article/details/116951814">
-                            <textarea class="content" name="text" required="" autocomplete="off" placeholder="说点什么..." maxlength="100000"></textarea>
+                            <textarea class="content" name="text" required autocomplete="off" placeholder="说点什么..." maxlength="100000"></textarea>
 
                 <div class="bottom">
                     <div id="emoji" class="emoji">😀</div>

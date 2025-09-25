@@ -1,5 +1,7 @@
 // src/composables/useClickOutside.ts
-import { onMounted, onUnmounted, Ref } from 'vue'
+import { onMounted, onUnmounted} from 'vue'
+import type { Ref } from 'vue'
+
 
 export function useClickOutside(target: Ref<HTMLElement | null>, handler: (e: MouseEvent) => void) {
   function onDocClick(e: MouseEvent) {

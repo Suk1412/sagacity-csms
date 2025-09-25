@@ -7,7 +7,7 @@ import '@/static/js/main.js';
                 <div class="logo">
                     <div class="logo_tips">👏</div>
                 </div>
-                <h2>Wx</h2>
+                <h2>WX</h2>
                 <p>Just for fun</p>
                 <div class="infor">
                     <div class="item">

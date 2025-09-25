@@ -1,4 +1,3 @@
-// utils/scroll.js
 export function handle_scroll() {
   const header = document.querySelector(".header");
   if (!header) return;

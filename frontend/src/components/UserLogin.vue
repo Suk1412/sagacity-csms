@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, defineEmits } from 'vue'
+import { computed, defineProps, defineEmits,type CSSProperties} from 'vue'
 import { useUserStore } from '@/store/user'
 const userStore = useUserStore()
 
@@ -36,7 +36,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue', 'logout'])
 
-const popupStyle = computed(() => ({
+const popupStyle = computed<CSSProperties>(() => ({
   position: 'fixed',
   top: `${props.anchorPosition.top + 10}px`,
   left: `${props.anchorPosition.left + 80}px`,

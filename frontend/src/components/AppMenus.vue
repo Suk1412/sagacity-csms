@@ -141,15 +141,16 @@ function switchToRegister() {
 <template>
     <div class="header">
       <div class="header_container">
-         <a class="header_logo" href="#/">
+        <router-link to="/">
+         <a class="header_logo">
           <component :is="Icons.IconHome" />
           <div class="content">
             <img src="@/assets/favicon.ico" alt="" srcset="">WX
           </div>
-         </a>
+         </a></router-link>
          <div class="nav_home_container">
             <div class="nav_item">
-               <a href="#/title">标签</a>            
+               <router-link to="/title">标签</router-link>          
             </div>
             <div class="nav_item">
                <a>分类<component :is="Icons.IconBottom" /></a>
@@ -163,10 +164,10 @@ function switchToRegister() {
             <div class="nav_item">
                <a>页面<component :is="Icons.IconBottom" /></a>
                 <ul>
-                  <li><a href="#/photo">相册</a></li>
-                  <li><a href="#/detail">关于</a></li>
+                  <li><router-link to="/photo">相册</router-link></li>
+                  <li><router-link to="/detail">关于</router-link></li>
                   <li><a>友链</a></li>
-                  <li><a>留言</a></li>
+                  <li><router-link to="/detail">留言</router-link></li>
                 </ul>
             </div>
          </div>

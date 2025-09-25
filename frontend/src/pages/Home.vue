@@ -1,5 +1,5 @@
 <template>
-            <section class="wx-hero">
+    <section class="wx-hero">
       <div class="main">
         <img src="@/static/img/wx-hero.jpg" class="avatar" alt="头像" />
         <div class="content">
@@ -284,9 +284,9 @@
 import '@/static/js/main.js';
 import * as Icons from '@/components/icons/Icons'
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { handle_moible_menu } from "@/static/js/moiblemenu.js";
-import { handle_scroll } from "@/static/js/scroll.js";
-let unbind;
+import { handle_moible_menu } from "@/static/js/moiblemenu.ts";
+import { handle_scroll } from "@/static/js/scroll.ts";
+let unbind: (() => void) | undefined
 onMounted(() => {unbind = handle_moible_menu(),handle_scroll();});
 onUnmounted(() => {unbind && unbind();});
 </script>
@@ -335,7 +335,7 @@ onUnmounted(() => {unbind && unbind();});
 }
 @media (min-width: 1200px) {
   .container {
-    max-width: 1130px;
+    max-width: 1000px;
   }
 }
 

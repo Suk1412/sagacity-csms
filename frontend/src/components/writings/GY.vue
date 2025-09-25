@@ -16,10 +16,6 @@
                     <component :is="Icons.IconRili" />
                     {{today}}                
                 </span>
-                <!-- <span class="meta">
-                    <component :is="Icons.IconMessage" />
-                    61                 
-                </span> -->
             </div>
         </div>
         <div class="post_content">

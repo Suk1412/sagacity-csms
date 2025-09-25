@@ -3,14 +3,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue'
+import { computed, defineAsyncComponent,type AsyncComponentLoader } from 'vue'
 
 const props = defineProps<{  activeTag?: string}>()
 
 // 源码（抽取标签）
 const rawMap = import.meta.glob('@/components/tags/*/*.vue', { as: 'raw', eager: true })
 // 组件模块（渲染用）
-const modMap = import.meta.glob('@/components/tags/*/*.vue')
+const modMap = import.meta.glob('@/components/tags/*/*.vue', { import: 'default' }) as Record<string, AsyncComponentLoader>
 
 function extractTagsPerFile(src: string): Set<string> {
   const set = new Set<string>()

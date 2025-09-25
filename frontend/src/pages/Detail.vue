@@ -6,7 +6,7 @@
                 <div class="logo">
                     <div class="logo_tips">👏</div>
                 </div>
-                <h2>Wx</h2>
+                <h2>WX</h2>
                 <p>Just for fun</p>
                 <div class="infor">
                     <div class="item">
@@ -106,7 +106,8 @@
                 </div>
             </div>
         </div>    
-        <About />
+        <GY />
+        <RouterView />
     </section>
 </div>
 
@@ -114,7 +115,7 @@
 
 <script setup lang="ts">
 import * as Icons from '@/components/icons/Icons'
-import About from '@/components/writings/About.vue'
+import GY from '@/components/writings/GY.vue'
 </script>
 
 <style scoped>

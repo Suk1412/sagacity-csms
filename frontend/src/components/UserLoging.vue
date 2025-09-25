@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, computed, onMounted, onUnmounted } from 'vue'
+import { ref, watch, nextTick, computed, onMounted, onUnmounted, type CSSProperties} from 'vue'
 
 const emit = defineEmits<{
   'update:modelValue': [boolean]
@@ -56,7 +56,7 @@ const props = defineProps<{
   anchorPosition: { top: number; left: number }
 }>()
 
-const inlineStyle = computed(() => {
+const inlineStyle = computed<CSSProperties>(() => {
   return {
     position: 'fixed',
     top: `${props.anchorPosition.top + 10}px`,
