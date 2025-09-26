@@ -35,7 +35,10 @@ router.post('/login', async (req, res) => {
 
       return res.json({
         message: '登录成功',
+        nickname: user.nickname,
         avatar:avatarBase64,
+        email: user.email,
+        role: user.role,
       });
     }
     catch (error) {

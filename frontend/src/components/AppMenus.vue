@@ -15,6 +15,8 @@ const showLogin = ref(false)
 const showRegister = ref(false)
 const showHoverPopup = ref(false)
 const userAvatar = ref('') // 登录后的用户头像
+const userNickname = ref('') // 用户昵称
+const userRole = ref('') // 用户角色
 
 import { useUserStore } from '@/store/user'
 const userStore = useUserStore()
@@ -30,12 +32,19 @@ async function handleLogin({ username, password }: { username: string, password:
     isLoggedIn.value = true
     loggedInUser.value = username
     userAvatar.value = response.data.avatar || ''
+    userNickname.value = response.data.nickname || ''
+    userRole.value = response.data.role || ''
     showLogin.value = false
-    userStore.setUser({ username, avatar: response.data.avatar})
-    // await userStore.fetchByUsername(username)
+    userStore.setUser({ username, 
+                        avatar: userAvatar.value,
+                        nickname: userNickname.value,
+                        role: userRole.value 
+                      })
     localStorage.setItem('user', JSON.stringify({
       username: loggedInUser.value,
-      avatar: userAvatar.value
+      avatar: userAvatar.value,
+      nickname: userNickname.value,
+      role: userRole.value
     }));
 
   } catch (err: any) {
@@ -124,6 +133,7 @@ onMounted(() => {
     isLoggedIn.value = true;
     loggedInUser.value = userData.username;
     userAvatar.value = userData.avatar;
+    userStore.setUser(userData)
   }
   window.addEventListener('resize', updateAnchorPosition)
 })
@@ -165,9 +175,9 @@ function switchToRegister() {
                <a>页面<component :is="Icons.IconBottom" /></a>
                 <ul>
                   <li><router-link to="/photo">相册</router-link></li>
-                  <li><router-link to="/detail">关于</router-link></li>
+                  <li><router-link to="/detail/gy">关于</router-link></li>
                   <li><a>友链</a></li>
-                  <li><router-link to="/detail">留言</router-link></li>
+                  <li><router-link to="/detail/ly">留言</router-link></li>
                 </ul>
             </div>
          </div>

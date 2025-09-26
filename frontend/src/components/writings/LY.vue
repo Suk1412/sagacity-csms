@@ -6,7 +6,7 @@
                     <component :is="Icons.IconDocument" />
                 </span>
             </div>
-            <h1 class="post_title">个人简介</h1>
+            <h1 class="post_title">留言板</h1>
             <div class="post_meta">
                 <span class="meta">
                     <component :is="Icons.IconUser" />

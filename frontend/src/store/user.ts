@@ -33,22 +33,5 @@ export const useUserStore = defineStore('user', {
       this.isLoggedIn = true
     },
     logout() { this.$reset();localStorage.removeItem('user')},
-    async fetchByUsername(username: string) {
-        if (!username) throw new Error('username 不能为空')
-        try {
-            // // const res = await api.get<UserProfile>(`/users/${encodeURIComponent(username)}`)
-            // const res = await api.get(`/users/${encodeURIComponent(username)}`)
-            // console.log('后端返回结果:', res)   // ✅ 打印看看
-
-
-            // const url = api.getUri({ url: `/users/${encodeURIComponent(username)}` });
-            // console.log('GET ->', url);
-            // return res
-            console.log('GET ->');
-        } catch (e) {
-            // 失败时可清理或保留旧数据，按需处理
-            throw e
-        }
-    }
   }
 })

@@ -106,7 +106,7 @@
                 </div>
             </div>
         </div>    
-        <GY />
+        <!-- <GY /> -->
         <RouterView />
     </section>
 </div>
@@ -115,16 +115,11 @@
 
 <script setup lang="ts">
 import * as Icons from '@/components/icons/Icons'
-import GY from '@/components/writings/GY.vue'
 </script>
 
 <style scoped>
 .logo {
     background-image:url('@/static/img/wx-hero.jpg');
-}
-
-.container {
-    max-width: 1200px;
 }
 
 .post_aside_infor::before {
