@@ -17,7 +17,7 @@
       <li class="pb-8"><p><a class="exit_li"><img src="@/static/svg/我的主页.svg" alt="我的主页" />我的主页</a></p></li>
       <li><p><a class="exit_li"><img src="@/static/svg/个人中心.svg" alt="个人中心" />个人中心</a></p></li>
       <li><p><a class="exit_li"><img src="@/static/svg/内容管理.svg" alt="内容管理" />内容管理</a></p></li>
-      <li><p><router-link to="/usermanage"><a class="exit_li"><img src="@/static/svg/后台管理.svg" alt="后台管理" />后台管理</a></router-link></p></li>
+      <li v-if="isAdmin"><p><router-link to="/usermanage"><a class="exit_li"><img src="@/static/svg/后台管理.svg" alt="后台管理" />后台管理</a></router-link></p></li>
       <li class="pt-8"><p><a class="exit_li" @click="$emit('logout')"><img src="@/static/svg/退出登录.svg" alt="退出登录" />退出登录</a></p></li>
     </ul>
   </div>
@@ -27,6 +27,11 @@
 import { computed, defineProps, defineEmits,type CSSProperties} from 'vue'
 import { useUserStore } from '@/store/user'
 const userStore = useUserStore()
+
+const isAdmin = computed(() => {
+  const r = userStore.role ?? ''
+  return String(r).toLowerCase() === 'admin'
+})
 
 const props = defineProps<{
   modelValue: boolean,

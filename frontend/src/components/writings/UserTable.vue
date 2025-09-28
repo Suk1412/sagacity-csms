@@ -4,9 +4,9 @@
     <div class="dt-top">
       <slot name="top">
         <div class="dt-default-top">
-          <div>共 {{ total }} 条</div>
+          <slot name="search"></slot>
           <div class="dt-page-size">
-            每页
+            共 {{ total }} 条 每页
             <select v-model.number="localPerPage" @change="onPerPageChange">
               <option v-for="n in perPageOptions" :key="n" :value="n">{{ n }}</option>
             </select>
@@ -72,9 +72,9 @@
         <button @click="goPage(totalPages)" :disabled="page === totalPages">尾页</button>
       </div>
 
-      <div class="dt-info">
+      <!-- <div class="dt-info">
         <span>显示 {{ startIndex }} - {{ endIndex }} / {{ total }}</span>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -240,7 +240,9 @@ th.col-head { cursor: pointer; user-select:none; }
 .muted { color:#c0c0c0 }
 .empty { text-align:center; padding:20px; color:#888 }
 .avatar { width:36px; height:36px; object-fit:cover; border-radius:4px }
-.dt-footer { display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:12px }
+.dt-footer { display:flex; justify-content:space-between; align-items:center; justify-content: center; margin-top:8px; gap:12px }
+.dt-pagination { display:flex; align-items:center;justify-content: center; }
 .dt-pagination button { margin-right:6px; padding:6px 8px }
 .dt-info { color:#666; font-size:13px }
+.dt-page-size {padding-left: 565px;}
 </style>

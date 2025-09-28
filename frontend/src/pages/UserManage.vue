@@ -1,11 +1,5 @@
 <template>
     <div class="container">
-      <div class="controls">
-        <input v-model="query" placeholder="搜索用户名/昵称/邮箱" @keyup.enter="fetchUsers" />
-        <button @click="fetchUsers" :disabled="loading">刷新</button>
-        <span v-if="loading">加载中…</span>
-        <span v-if="error" class="error">{{ error }}</span>
-      </div>
     <UserTable
       :columns="columns"
       :rows="users"
@@ -17,6 +11,15 @@
       @sort-change="onSortChange"
       @selection-change="onSelectionChange"
     >
+      <template #search>
+        <div class="controls">
+          <input v-model="query" placeholder="搜索用户名/昵称/邮箱" @keyup.enter="fetchUsers" />
+          <button @click="fetchUsers" :disabled="loading">刷新</button>
+          <span v-if="loading">加载中…</span>
+          <span v-if="error" class="error">{{ error }}</span>
+        </div>
+      </template>
+
       <template #actions="{ row }">
         <button @click="viewUser(row)">查看</button>
         <button @click="openEdit(row)">编辑</button>
@@ -109,4 +112,5 @@ function deleteUser(row:any) { /* ... */ }
 <style>
 .avatar { width:36px;height:36px;border-radius:4px;object-fit:cover }
 .avatar.placeholder { display:flex; align-items:center; justify-content:center; background:#eee; color:#666 }
+.controls { display: flex; gap:10px }
 </style>

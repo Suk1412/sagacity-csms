@@ -29,13 +29,14 @@
                         <component :is="Icons.IconMulu" />
                         文章目录
                     </h3>
-                    <ul id="toc">
+                    <!-- <ul id="toc">
                         <li class="toc-level-2 active"><a>我的介绍</a></li>
                         <li class="toc-level-2"><a>联系方式</a></li>
                         <li class="toc-level-2"><a>博客历史</a></li>
                         <li class="toc-level-2"><a>技术栈与兴趣</a></li>
                         <li class="toc-level-2"><a>个人特点</a></li>
-                    </ul>
+                    </ul> -->
+                    <TableOfContents />
                 </div>
                 <div class="post_aside_card">
                     <h3><component :is="Icons.IconHot"/>数据统计</h3>
@@ -106,7 +107,6 @@
                 </div>
             </div>
         </div>    
-        <!-- <GY /> -->
         <RouterView />
     </section>
 </div>
@@ -115,6 +115,7 @@
 
 <script setup lang="ts">
 import * as Icons from '@/components/icons/Icons'
+import TableOfContents from '@/components/TableOfContents.vue'
 </script>
 
 <style scoped>
