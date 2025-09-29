@@ -20,9 +20,7 @@
         </div>
         <div class="post_content">
             <div class="tip tip-info fade-in visible">
-                <div class="tip-body">
-                    最后一次更新时间：2025-09-12
-                </div>
+                <div class="tip-body"></div>
             </div>
             <h2 id="我的介绍" class="fade-in visible">我的介绍</h2>
                 <ul class="fade-in visible">

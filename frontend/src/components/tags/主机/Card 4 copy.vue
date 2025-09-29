@@ -9,7 +9,7 @@ import '@/static/js/main.js';
       </div>
       <div class="content">
          <div class="tags"><span class="tag">主机</span></div>
-         <h3> 全新开源个人主页-ZYYO主页</h3>
+         <h3>全新开源个人主页-ZYYO主页</h3>
          <p>2024-12-23</p>
       </div>
    </a>

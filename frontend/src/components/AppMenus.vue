@@ -178,6 +178,10 @@ function switchToRegister() {
                   <li><router-link to="/detail/gy">关于</router-link></li>
                   <li><a>友链</a></li>
                   <li><router-link to="/detail/ly">留言</router-link></li>
+                  <!-- <li><a href="/photo">相册</a></li>
+                  <li><a href="/detail/gy">关于</a></li>
+                  <li><a>友链</a></li>
+                  <li><a href="/detail/ly">留言</a></li> -->
                 </ul>
             </div>
          </div>

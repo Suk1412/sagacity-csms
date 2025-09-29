@@ -3,6 +3,8 @@ import Home from '@/pages/Home.vue'
 import Detail from '@/pages/Detail.vue'
 import GY from '@/components/writings/GY.vue'
 import LY from '@/components/writings/LY.vue'
+import srsRAN from '@/components/writings/srsRAN.vue'
+import FGhoul from '@/components/writings/5Ghoul.vue'
 import Photo from '@/pages/Photo.vue'
 import Title from '@/pages/Title.vue'
 import UserManage from '@/pages/UserManage.vue'
@@ -13,7 +15,9 @@ const routes:RouteRecordRaw[] = [
     children: [
       { path: '', component: GY },
       { path: 'gy', component: GY },
-      { path: 'ly', component: LY }
+      { path: 'ly', component: LY },
+      { path: 'srsRAN', component: srsRAN },
+      { path: '5ghoul', component: FGhoul },
     ]
   },
   { path: '/photo', component: Photo },

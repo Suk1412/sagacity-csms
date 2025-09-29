@@ -104,8 +104,6 @@ function handleDocumentClick(e: MouseEvent) {
   if (!inPanel && !inHint) close()
 }
 
-
-
 onMounted(() => {
   window.addEventListener('mousemove', handleMouseMoveOpen,  { passive: true })
   window.addEventListener('mousemove', handleMouseMoveClose, { passive: true })
