@@ -30,7 +30,7 @@ router.post('/login', async (req, res) => {
       if (!isMatch) {
         return res.status(401).json({ message: '密码错误' })
       };
-
+      
       const avatarBase64 = await convertImageBufferToDataURI(user.avatar);
 
       return res.json({

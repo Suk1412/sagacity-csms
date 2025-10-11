@@ -1,41 +1,49 @@
 <template>
-  <component v-for="c in filtered" :key="c.path" :is="c.component"/>
+  <CardItem v-for="card in filteredCards" :key="card.id" :card="card"/>
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent,type AsyncComponentLoader } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import api from '@/api/http'
+import CardItem from './CardItem.vue'
+import '@/static/js/main.js';
 
-const props = defineProps<{  activeTag?: string}>()
 
-// 源码（抽取标签）
-const rawMap = import.meta.glob('@/components/tags/*/*.vue', { as: 'raw', eager: true })
-// 组件模块（渲染用）
-const modMap = import.meta.glob('@/components/tags/*/*.vue', { import: 'default' }) as Record<string, AsyncComponentLoader>
+const props = defineProps({activeTag: { type: String, default: '' }})
+const cards = ref<any[]>([])
 
-function extractTagsPerFile(src: string): Set<string> {
-  const set = new Set<string>()
-  const re = /<span\s+class=(["'])tag\1>\s*([^<\s]+)\s*<\/span>/gi
-  let m: RegExpExecArray | null
-  while ((m = re.exec(src))) set.add(m[2])
-  return set
+interface Card {
+  id: number
+  url: string
+  img: string
+  title: string
+  theme: string
+  time: string
 }
 
-// 文件 -> 标签集合
-const fileTags = Object.fromEntries(
-  Object.entries(rawMap).map(([path, src]) => [path, extractTagsPerFile(src as string)])
-) as Record<string, Set<string>>
+const cardService = {
+  async listAllCards(): Promise<Card[]> {
+    const res = await api.get('/cards/all') 
+    return res.data.data 
+  },
+}
 
-// 所有卡片（异步组件）
-const allCards = Object.entries(modMap).map(([path, loader]) => ({
-  path,
-  component: defineAsyncComponent(loader)
-}))
+// 从后端加载数据库内容
+async function fetchCards () {
+  try {
+      const all = await cardService.listAllCards()
+      cards.value = all
+  } catch (error) {
+    console.error('加载卡片失败:', error)
+  } finally {
+  }
+}
+onMounted(fetchCards)
 
-// 过滤
-const filtered = computed(() => {
-  const t = (props.activeTag || '').trim()
-  if (!t) return allCards
-  return allCards.filter(c => fileTags[c.path]?.has(t))
+const filteredCards = computed(() => {
+  if (!props.activeTag || props.activeTag === '') 
+    return cards.value
+  return cards.value.filter(c => c.title === props.activeTag)
 })
 </script>
 

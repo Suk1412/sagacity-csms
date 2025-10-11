@@ -33,12 +33,139 @@
       <button class="btn middle" @click="onAction('B')"><component :is="Icons.IconFileDow" /></button>
       <button class="btn footer" @click="onAction('C')"><component :is="Icons.IconFileRm" /></button>
     </div>
+    <CreateCard
+        v-model:show="showModal"
+        :title="modalTitle"
+        :width="'560px'"
+        @close="onClose"
+      >
+        <!-- 默认 slot：主体内容 - 根据 action 渲染 -->
+        <template #default>
+          <div v-if="action === 'A'">
+            <form class="card-form" @submit="submit">
+              <div class="card-info">
+                <label class="label">图片</label>
+                <button class="styled-button" @click="triggerFileInput" type="button">选择本地图片</button>
+              </div>
+              <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" style="display:none" />
+              <div v-if="imagePreview" class="image-preview">
+                <img :src="imagePreview" alt="选中图片" />
+              </div>
+              <div class="card-info">
+                <label class="label">链接</label>
+                <input id="card-url" type="text" v-model="url" placeholder="待输入链接" class="styled-input"/>
+              </div>
+              <div class="card-info">
+                <label class="label">标签</label>
+                <input id="card-title" type="text" v-model="title" placeholder="待输入标签" class="styled-input"/>
+              </div>
+              <div class="card-info">
+                <label class="label">主题</label>
+                <input id="card-theme" type="text" v-model="theme" placeholder="待输入主题" class="styled-input"/>
+              </div>
+              <div class="footer-btn">
+                <button class="btn-confirm" type="submit">提交</button>
+                <button @click="showModal = false" class="btn-cancel">关闭</button>
+              </div>
+            </form>
+          </div>
+          <div v-else-if="action === 'B'">
+            <p>这是 B 弹窗的内容（例如表单）。</p>
+            <input v-model="form.input" placeholder="示例输入" />
+          </div>
+          <div v-else>
+            <p>默认弹窗内容</p>
+          </div>
+        </template>
+    </CreateCard>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted} from 'vue'
 import * as Icons from '@/components/icons/Icons'
+import CreateCard from '@/components/CreateCard.vue'
+import api from '@/api/http'
+
+const today = ref(new Date().toISOString().slice(0, 10))
+
+const emit = defineEmits<{
+  'addcard': [{ url:string; img: string; title: string; theme: string }]
+}>()
+
+const showModal = ref(false);
+const action = ref('');
+const modalTitle = ref('提示');
+const form = ref({ input: '' });
+const fileInput = ref('')
+const imagePreview = ref('')
+const url = ref('')
+const img = ref('')
+const title = ref('')
+const theme = ref('')
+
+const errorMsg = ref('')
+const okMsg = ref('')
+
+
+function onAction(act: string) {
+  action.value = act;
+  if (act === 'A') modalTitle.value = '创建标签';
+  else if (act === 'B') modalTitle.value = '操作 B';
+  else modalTitle.value = '提示';
+  showModal.value = true;
+}
+
+// 触发文件选择
+function triggerFileInput() {
+  fileInput.value?.click()
+}
+
+async function handleFileChange(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  imagePreview.value = URL.createObjectURL(file)
+  const formData = new FormData()
+  formData.append('file', file)
+  try {
+    const res = await api.post('/upload', formData)
+    img.value = res.data.url  // 使用后端返回的永久路径
+    console.log('服务器图片路径:', img.value)
+  } catch (err) {
+    console.error('上传失败', err)
+    confirm("上传失败")
+  }
+}
+
+function resetMsg() {
+  errorMsg.value = ''
+  okMsg.value = ''
+}
+
+async function submit() {
+  resetMsg()
+  try{
+    showModal.value = false
+    await api.post('/addcard', {
+      url: url.value,
+      img: img.value,
+      title: title.value,
+      theme: theme.value,
+      time: today.value,
+    })
+    okMsg.value = '保存成功'
+    emit('addcard', { url:url.value, img: img.value, title: title.value, theme: theme.value, time: today.value }) // 可选
+    close()
+  } catch (err: any) {
+    errorMsg.value = err?.response?.data?.message || err?.message || '保存失败'
+  }
+}
+
+function onClose() {
+  console.log('弹窗关闭');
+  action.value = null;
+}
+
 
 const isOpen = ref(false)
 let closeTimer: number | null = null
@@ -52,7 +179,8 @@ function open() {
 }
 function close() {
   isOpen.value = false
-  cancelAutoClose()
+  // cancelAutoClose()
+  resetMsg()
 }
 function toggle() {
   isOpen.value ? close() : open()
@@ -116,10 +244,7 @@ onUnmounted(() => {
   cancelAutoClose()
 })
 
-function onAction(name: string) {
-  // 这里写具体业务
-  console.log('clicked', name)
-}
+
 </script>
 
 <style scoped>
@@ -218,4 +343,85 @@ function onAction(name: string) {
 .btn:active {
   transform: translateY(1px);
 }
+.card-info{
+  width: 530px;
+  display: flex;
+  align-items: center;
+  justify-content:flex-start;
+  
+}
+
+.card-info label{
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-right: 50px;
+  display: flex;
+  align-items: center;   /* label 内部文字垂直居中 */
+}
+
+.styled-input {
+  width: 75%;
+  padding: 6px 12px;    /* 内边距，让输入文字不贴边 */
+  font-size: 20px;       /* 字体大小 */
+  border: 1px solid #ccc; /* 默认边框颜色 */
+  border-radius: 6px;     /* 圆角 */
+  outline: none;          /* 去掉默认蓝色轮廓线 */
+  transition: all 0.2s;   /* 平滑过渡效果 */
+}
+
+.image-preview img {
+  margin-top: 8px;
+  width: 307px;
+  height: 164px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+/* 主按钮样式 */
+.btn-confirm,.btn-cancel {
+  padding: 10px 20px;          /* 内边距 */
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;                 /* 字体颜色 */
+  background: linear-gradient(90deg, #4facfe, #00f2fe); /* 渐变背景 */
+  border: none;
+  border-radius: 6px;           /* 圆角 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* 阴影 */
+}
+
+/* 悬停效果 */
+.btn-confirm:hover,.btn-cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+/* 点击效果 */
+.btn-confirm:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* 次要按钮样式 */
+.btn-cancel {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-cancel {
+  background: #e0e0e0;
+}
+.footer-btn { 
+  padding: 12px 18px;
+  padding-top: 25px;
+  border-top:1px solid #eee; 
+  display:flex; 
+  gap:20px; 
+  justify-content:center; 
+  
+}
+
 </style>

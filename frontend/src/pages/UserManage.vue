@@ -23,7 +23,7 @@
       <template #actions="{ row }">
         <button @click="viewUser(row)">查看</button>
         <button @click="openEdit(row)">编辑</button>
-        <button @click="deleteUser(row)" class="danger">删除</button>
+        <button @click="delUser(row)" class="danger">删除</button>
       </template>
     </UserTable>
   </div>
@@ -51,6 +51,9 @@ const userService = {
     const res = await api.get('/users/all') // 注意 baseURL + '/users/all'
     console.log(res.data) // 返回对象
     return res.data.data || res.data || []
+  },
+  async deleteUser(id: number): Promise<void> {
+    const res = await api.delete(`/users/${id}`)
   }
 }
 
@@ -89,7 +92,6 @@ async function fetchUsers() {
 }
 onMounted(fetchUsers)
 
-
 function onPageChange(p:number) {
   console.log('页码', p)
   // 若服务端分页则在这里触发接口请求
@@ -106,7 +108,21 @@ function onSelectionChange(sel:any[]) {
 
 function viewUser(row:any) { /* ... */ }
 function openEdit(row:any) { /* ... */ }
-function deleteUser(row:any) { /* ... */ }
+async function delUser(row:any) { 
+  loading.value = true
+  if (!confirm(`确定要删除用户 "${row.username}" 吗？此操作不可恢复！`)) {
+    return
+  }
+  try {
+    await userService.deleteUser(row.id)
+    await fetchUsers()
+  } catch (e: any) {
+    console.error('删除失败', e)
+    alert(e?.response?.data?.message ?? e?.message ?? '删除失败')
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style>

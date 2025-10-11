@@ -105,7 +105,6 @@ async function submit() {
     return
   }
   try{
-    // 假设你的后端注册路由为 /register
     await api.post('/register', {
       username: username.value,
       password: password.value

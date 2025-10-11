@@ -23,11 +23,12 @@
                 <div class="tip-body"></div>
             </div>
             <h2 class="fade-in">构建说明</h2>
-                <p class="fade-in">
+                <div class="fade-in">
                     <strong>安装依赖项</strong><br>
                     <div style="padding-left: 2em;">
-                    sudo apt-get install cmake make gcc g++ pkg-config libfftw3-dev libmbedtls-dev libsctp-dev libyaml-cpp-dev
-                    <br></div>
+                      sudo apt-get install cmake make gcc g++ pkg-config libfftw3-dev libmbedtls-dev libsctp-dev libyaml-cpp-dev
+                      <br>
+                    </div>
                     <strong>拉取srsRAN项目</strong><br>
                     <div style="padding-left: 2em;">
                     git clone <a href="https://github.com/srsran/srsRAN_Project.git" target="_blank">https://github.com/srsRAN/srsRAN_Project.git</a><br></div>
@@ -39,24 +40,24 @@
                     cmake ../ <br>
                     make -j $(nproc)<br>
                     </div>
-                </p>
+                </div>
             <h2 class="fade-in">gNB配置</h2>
-                <p class="fade-in">
+                <div class="fade-in">
                     <div style="padding-left: 2em;">
                         cd build/apps/gnb<br>
                         cp ../../../configs/gnb_rf_b200_tdd_n78_20mhz.yml new_gNB.yml<br>
                     </div>
-                </p>
+                </div>
             
             <h2 class="fade-in">gNB配置修改</h2>
-                <p class="fade-in">
+                <div class="fade-in">
                 <pre class="yaml-block">{{ yamlText }}</pre>
-                </p>
+                </div>
             <h2 class="fade-in">引用相关文档</h2>
-                <p class="fade-in">
+                <div class="fade-in">
                     <a href="https://github.com/srsran/srsRAN_Project.git" target="_blank"><strong>srsRAN_Project Git地址</strong></a><br>
                     <a href="https://docs.srsran.com/projects/project/en/latest/tutorials/source/index.html" target="_blank"><strong>srsRAN教程</strong></a><br>
-                </p>
+                </div>
         </div>
     </div>
 </template>
