@@ -40,7 +40,8 @@
         @close="onClose"
       >
         <!-- 默认 slot：主体内容 - 根据 action 渲染 -->
-        <template #default>
+        <!-- <template #default> -->
+        <template>
           <div v-if="action === 'A'">
             <form class="card-form" @submit="submit">
               <div class="card-info">
@@ -94,10 +95,10 @@ const emit = defineEmits<{
 }>()
 
 const showModal = ref(false);
-const action = ref('');
+const action = ref<string | null>(null)
 const modalTitle = ref('提示');
 const form = ref({ input: '' });
-const fileInput = ref('')
+const fileInput = ref<HTMLInputElement | null>(null)
 const imagePreview = ref('')
 const url = ref('')
 const img = ref('')
@@ -151,10 +152,9 @@ async function submit() {
       img: img.value,
       title: title.value,
       theme: theme.value,
-      time: today.value,
     })
     okMsg.value = '保存成功'
-    emit('addcard', { url:url.value, img: img.value, title: title.value, theme: theme.value, time: today.value }) // 可选
+    emit('addcard', { url:url.value, img: img.value, title: title.value, theme: theme.value }) // 可选
     close()
   } catch (err: any) {
     errorMsg.value = err?.response?.data?.message || err?.message || '保存失败'
